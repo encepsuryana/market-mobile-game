@@ -13,11 +13,8 @@ import {
 } from "react-native";
 
 import { SliderBox } from "react-native-image-slider-box";
-import Icon from "react-native-vector-icons/Ionicons";
 
 var { height, width } = Dimensions.get("window");
-
-import DetailBanner from "../Banner/DetailBanner";
 
 import styles from "../../styles/Styles";
 
@@ -92,71 +89,87 @@ export default class HomeScreen extends Component {
           </View>
         </View>
 
-        <View style={(styles.container, { marginTop: -21 })}>
+        <View style={(styles.container, { marginTop: -20 })}>
           <View style={styles.wrapperCategories}>
             <View
               style={{
-                borderRadius: 20,
-                paddingVertical: 20,
-                paddingHorizontal: 20,
+                paddingHorizontal: 12,
               }}
             >
-              <Text style={styles.titleCategories}>List Games</Text>
-              <View style={{ height: 10 }} />
-              <FlatList
-                horizontal={true}
-                data={this.state.dataGames}
-                renderItem={({ item }) => this._renderCategories(item)}
-                keyExtractor={(item, index) => index.toString()}
-              />
+              {/* Render List Games */}
+              <View>
+                <Text style={styles.titleCategories}>List Games</Text>
+                <View style={{ height: 10 }} />
+                <ScrollView horizontal={true}>
+                  {this.state.dataGames.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        style={styles.Categories}
+                        key={index}
+                        onPress={() => this.setState({ selectCatg: item.id })}
+                      >
+                        <Image
+                          style={{ width: 65, height: 65, borderRadius: 12 }}
+                          source={{ uri: item.tile }}
+                        />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
 
-              <FlatList
-                data={this.state.dataTopups}
-                numColumns={2}
-                renderItem={({ item }) => this._renderItemTopups(item)}
-                keyExtractor={(item, index) => index.toString()}
-              />
+              {/* Render Items */}
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {this.state.dataTopups.map((item, index) => {
+                  let catg = this.state.selectCatg;
+                  if (catg == "All" || catg == item.category) {
+                    return (
+                      <View>
+                        <TouchableOpacity style={styles.ItemStyle} key={index}>
+                          <Image
+                            style={styles.icoItem}
+                            resizeMode="stretch"
+                            source={{ uri: item.icon }}
+                          />
+                          <View style={{ marginLeft: 12 }}>
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontSize: 14,
+                                width: 90,
+                              }}
+                            >
+                              {item.items}
+                            </Text>
+
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontWeight: "bold",
+                                fontSize: 16,
+                                color: "green",
+                                width: 90,
+                              }}
+                            >
+                              Rp. {item.price}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  }
+                })}
+              </View>
             </View>
           </View>
         </View>
       </ScrollView>
     );
-  }
-
-  _renderCategories(item) {
-    return (
-      <TouchableOpacity
-        style={[styles.Categories]}
-        onPress={() => this.setState({ selectCatg: item.id })}
-      >
-        <Image
-          style={{ width: 65, height: 65, borderRadius: 12 }}
-          source={{ uri: item.tile }}
-        />
-      </TouchableOpacity>
-    );
-  }
-
-  _renderItemTopups(item) {
-    let catg = this.state.selectCatg;
-    if (catg == "All" || catg == item.category) {
-      return (
-        <TouchableOpacity style={styles.divFood}>
-          <Image style={styles.imageFood} source={{ uri: item.icon }} />
-          <View
-            style={{
-              backgroundColor: "transparent",
-              width: width / 2 - 20 - 10,
-            }}
-          />
-          <Text
-            style={{ fontWeight: "bold", fontSize: 14, textAlign: "center" }}
-          >
-            {item.items}
-          </Text>
-          <Text style={{ fontSize: 16, color: "green" }}>Rp. {item.price}</Text>
-        </TouchableOpacity>
-      );
-    }
   }
 }

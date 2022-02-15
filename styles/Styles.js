@@ -80,7 +80,6 @@ export default StyleSheet.create({
   },
 
   Categories: {
-    alignItems: "center",
     borderRadius: 12,
     padding: 8,
   },
@@ -90,18 +89,22 @@ export default StyleSheet.create({
     color: "#253B6E",
     marginHorizontal: 8,
   },
-  imageFood: {
-    width: 80,
-    height: 80,
+  icoItem: {
+    width: width / 6 - 20 - 8,
+    height: width / 5 - 10 - 30,
   },
-  divFood: {
-    width: width / 2 - 40,
-    padding: 10,
+  ItemStyle: {
+    width: width / 2 - 25,
+    padding: 12,
     borderRadius: 10,
-    marginTop: 25,
+    marginTop: 5,
     marginBottom: 5,
     marginLeft: 10,
-    alignItems: "center",
+    flex: 1,
+    flexDirection: "row",
     backgroundColor: "white",
+    flexWrap: "wrap",
+    alignContent: "center",
+    alignItems: "center",
   },
 });
