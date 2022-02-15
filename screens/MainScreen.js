@@ -1,9 +1,5 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import React from "react";
-// import { authentication } from "../firebase/Config";
-// import { useNavigation } from "@react-navigation/native";
-
-import styles from "../styles/Styles";
 
 import Home from "./components/HomeScreen";
 import Cart from "./components/CartScreen";
@@ -15,15 +11,6 @@ import IconIos from "react-native-vector-icons/Ionicons";
 const MainScreen = () => {
   const Tab = createMaterialBottomTabNavigator();
 
-  // const navigation = useNavigation();
-  // const handleSignOut = () => {
-  //   authentication
-  //     .signOut()
-  //     .then(() => {
-  //       navigation.replace("Login");
-  //     })
-  //     .catch((error) => alert(error.message));
-  // };
   return (
     <Tab.Navigator
       activeColor="#E43A19"

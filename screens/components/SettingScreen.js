@@ -32,12 +32,8 @@ const SettingScreen = () => {
               Hi, {authentication.currentUser.email}
             </Text>
             <Text style={{ color: "#253B6E", marginVertical: 18 }}>
-              Mau topup game apa nih? lagi ada promo sekarang loh
+              Kamu sudah beli Item apa saja nih?
             </Text>
-          </View>
-
-          <View>
-            <Text>Slider</Text>
           </View>
 
           <TouchableOpacity onPress={handleSignOut} style={styles.buttonStyle}>

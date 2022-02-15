@@ -19,7 +19,7 @@ export default StyleSheet.create({
   },
   textContainerHome: {
     display: "flex",
-    paddingHorizontal: 28,
+    paddingHorizontal: 18,
     paddingTop: 12,
   },
   titleHome: {
@@ -77,6 +77,7 @@ export default StyleSheet.create({
 
   wrapperBanner: {
     alignItems: "center",
+    marginVertical: -20,
   },
 
   Categories: {
@@ -106,5 +107,22 @@ export default StyleSheet.create({
     flexWrap: "wrap",
     alignContent: "center",
     alignItems: "center",
+  },
+  textTopup: {
+    marginLeft: 12,
+    width: 90,
+  },
+  topupItem: {
+    fontSize: 14,
+  },
+  topupPrice: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "green",
+  },
+  wrapperTopupItems: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
 });
