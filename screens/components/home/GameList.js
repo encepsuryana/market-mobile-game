@@ -1,6 +1,10 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../../styles/Styles";
+
+//import db firestore
+import db from "../../../firebase/Config";
 
 const GameList = () => {
   //fetch game list from api.belajarreactnative.com/top-up.json
@@ -8,6 +12,7 @@ const GameList = () => {
   const [dataGames, setDataGames] = useState([]);
   const [dataTopup, setDataTopup] = useState([]);
   const [selectCategorie, setSelectCategorie] = useState(1);
+  const [dataCart, setDataCart] = useState([]);
 
   const fetchData = async () => {
     const url = "https://api.belajarreactnative.com/top-up.json";
@@ -26,6 +31,41 @@ const GameList = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  //add to cart item.id, item.items, item.icon, item.price, item.category from json save to asyncstorage
+  const addToCart = (item) => {
+    const itemcart = {
+      id: item.id,
+      items: item.items,
+      icon: item.icon,
+      price: item.price,
+      category: item.category,
+    };
+
+    //if cart is empty
+    if (dataCart.length === 0) {
+      AsyncStorage.getItem("cart")
+        .then((dataCart) => {
+          if (dataCart !== null) {
+            const cart = JSON.parse(dataCart);
+            cart.push(itemcart);
+            AsyncStorage.setItem("cart", JSON.stringify(cart));
+            setDataCart(cart);
+          } else {
+            const cart = [];
+            cart.push(itemcart);
+            AsyncStorage.setItem("cart", JSON.stringify(cart));
+            setDataCart(cart);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      //if cart is not empty
+      console.log("cart data is not empty");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -71,7 +111,7 @@ const GameList = () => {
                   <View key={index}>
                     <TouchableOpacity
                       style={styles.ItemStyle}
-                      onPress={() => console.log(item.items)}
+                      onPress={() => addToCart(item)}
                     >
                       <Image
                         style={styles.icoItem}

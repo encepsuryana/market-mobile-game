@@ -1,15 +1,9 @@
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { authentication } from "../../firebase/Config";
 import { useNavigation } from "@react-navigation/native";
 import styles from "../../styles/Styles";
 
-const SettingScreen = () => {
+const AccountScreen = () => {
   const navigation = useNavigation();
   const handleSignOut = () => {
     authentication
@@ -45,4 +39,4 @@ const SettingScreen = () => {
   );
 };
 
-export default SettingScreen;
+export default AccountScreen;

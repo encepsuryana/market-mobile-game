@@ -3,7 +3,7 @@ import React from "react";
 
 import Home from "./components/HomeScreen";
 import Cart from "./components/CartScreen";
-import Setting from "./components/SettingScreen";
+import Account from "./components/AccountScreen";
 
 import Icon from "react-native-vector-icons/Feather";
 import IconIos from "react-native-vector-icons/Ionicons";
@@ -38,12 +38,12 @@ const MainScreen = () => {
         }}
       />
       <Tab.Screen
-        name="Setting"
-        component={Setting}
+        name="Account"
+        component={Account}
         options={{
-          tabBarLabel: "Setting",
+          tabBarLabel: "Account",
           tabBarIcon: ({ color }) => (
-            <Icon name="align-right" color={color} size={22} />
+            <IconIos name="md-person-circle-outline" color={color} size={22} />
           ),
         }}
       />
