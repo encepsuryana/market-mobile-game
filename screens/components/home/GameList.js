@@ -33,7 +33,9 @@ const GameList = () => {
         <Text style={styles.titleCategories}>List Games</Text>
         <ScrollView horizontal={true}>
           {isLoading ? (
-            <Text>Loading...</Text>
+            <View style={styles.wrapperLoading}>
+              <Text style={styles.textLoading}>Loading...</Text>
+            </View>
           ) : (
             //Render List Games
             dataGames.map((item, index) => {
@@ -58,7 +60,9 @@ const GameList = () => {
         {/* Render List Topup */}
         <View style={styles.wrapperTopupItems}>
           {isLoading ? (
-            <Text>Loading...</Text>
+            <View style={styles.wrapperLoading}>
+              <Text style={styles.textLoading}>Loading...</Text>
+            </View>
           ) : (
             //Render List Topup
             dataTopup.map((item, index) => {

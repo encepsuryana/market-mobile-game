@@ -124,5 +124,20 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
+    marginVertical: 12,
+  },
+  wrapperCategories: {
+    paddingHorizontal: 12,
+  },
+  textLoading: {
+    fontSize: 16,
+    color: "#253B6E",
+    textAlign: "center",
+    marginVertical: 20,
+  },
+  wrapperLoading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
