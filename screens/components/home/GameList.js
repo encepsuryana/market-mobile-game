@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../../styles/Styles";
+import { useNavigation } from "@react-navigation/native";
 
 //import db firestore
 import db from "../../../firebase/Config";
@@ -13,6 +14,8 @@ const GameList = () => {
   const [dataTopup, setDataTopup] = useState([]);
   const [selectCategorie, setSelectCategorie] = useState(1);
   const [dataCart, setDataCart] = useState([]);
+
+  const navigation = useNavigation();
 
   const fetchData = async () => {
     const url = "https://api.belajarreactnative.com/top-up.json";
@@ -32,39 +35,21 @@ const GameList = () => {
     fetchData();
   }, []);
 
-  //add to cart item.id, item.items, item.icon, item.price, item.category from json save to asyncstorage
+  //get item.id, item.items, item.price, item.category, item.icon from dataGames
   const addToCart = (item) => {
-    const itemcart = {
+    const itemCart = {
       id: item.id,
       items: item.items,
-      icon: item.icon,
       price: item.price,
       category: item.category,
+      icon: item.icon,
     };
 
-    //if cart is empty
-    if (dataCart.length === 0) {
-      AsyncStorage.getItem("cart")
-        .then((dataCart) => {
-          if (dataCart !== null) {
-            const cart = JSON.parse(dataCart);
-            cart.push(itemcart);
-            AsyncStorage.setItem("cart", JSON.stringify(cart));
-            setDataCart(cart);
-          } else {
-            const cart = [];
-            cart.push(itemcart);
-            AsyncStorage.setItem("cart", JSON.stringify(cart));
-            setDataCart(cart);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      //if cart is not empty
-      console.log("cart data is not empty");
-    }
+    navigation.navigate("Cart", {
+      itemCart: itemCart,
+    });
+
+    console.log(itemCart);
   };
 
   return (
@@ -113,11 +98,16 @@ const GameList = () => {
                       style={styles.ItemStyle}
                       onPress={() => addToCart(item)}
                     >
-                      <Image
-                        style={styles.icoItem}
-                        resizeMode="stretch"
-                        source={{ uri: item.icon }}
-                      />
+                      {dataGames.map((list) => {
+                        if (list.id === item.category) {
+                          return (
+                            <Image
+                              style={styles.icoItem}
+                              source={{ uri: list.icon }}
+                            />
+                          );
+                        }
+                      })}
                       <View style={styles.textTopup}>
                         <Text numberOfLines={1} style={styles.topupItem}>
                           {item.items}

@@ -3,6 +3,10 @@ import { authentication } from "../../firebase/Config";
 import { useNavigation } from "@react-navigation/native";
 import styles from "../../styles/Styles";
 
+import HeaderScreen from "./header/HeaderScreen";
+import Banner from "./home/Banner";
+import Footer from "./footer/Footer";
+
 const AccountScreen = () => {
   const navigation = useNavigation();
   const handleSignOut = () => {
@@ -20,21 +24,16 @@ const AccountScreen = () => {
       showsHorizontalScrollIndicator={false}
     >
       <View style={styles.container}>
-        <View style={styles.wrapper}>
-          <View style={styles.textContainer}>
-            <Text style={styles.titleHome}>
-              Hi, {authentication.currentUser.email}
-            </Text>
-            <Text style={{ color: "#253B6E", marginVertical: 18 }}>
-              Kamu sudah beli Item apa saja nih?
-            </Text>
-          </View>
+        <HeaderScreen />
+        <Banner />
 
+        <View style={styles.wrapper}>
           <TouchableOpacity onPress={handleSignOut} style={styles.buttonStyle}>
             <Text style={styles.buttonText}>Sign Out</Text>
           </TouchableOpacity>
         </View>
       </View>
+      <Footer />
     </ScrollView>
   );
 };

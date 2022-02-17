@@ -4,6 +4,7 @@ import React from "react";
 import HeaderScreen from "./header/HeaderScreen";
 import Banner from "./home/Banner";
 import GameList from "./home/GameList";
+import Footer from "./footer/Footer";
 
 const HomeScreen = () => {
   return (
@@ -14,6 +15,7 @@ const HomeScreen = () => {
       <HeaderScreen />
       <Banner />
       <GameList />
+      <Footer />
     </ScrollView>
   );
 };

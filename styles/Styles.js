@@ -27,10 +27,17 @@ export default StyleSheet.create({
     fontWeight: "bold",
     color: "#253B6E",
   },
+
   image: {
     resizeMode: "contain",
     marginTop: 42,
     left: -80,
+  },
+  imageBanner: {
+    width: "100%",
+    height: height * 0.2,
+    borderRadius: 12,
+    marginVertical: 12,
   },
   buttonStyle: {
     borderRadius: 12,
@@ -93,6 +100,7 @@ export default StyleSheet.create({
   icoItem: {
     width: width / 6 - 20 - 8,
     height: width / 5 - 10 - 30,
+    resizeMode: "contain",
   },
   ItemStyle: {
     width: width / 2 - 25,
@@ -103,7 +111,7 @@ export default StyleSheet.create({
     marginLeft: 10,
     flex: 1,
     flexDirection: "row",
-    backgroundColor: "white",
+    backgroundColor: "#D2ECF9",
     flexWrap: "wrap",
     alignContent: "center",
     alignItems: "center",
@@ -139,5 +147,80 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  wrapperCart: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  cartWrapper: {
+    backgroundColor: "#D2ECF9",
+    paddingHorizontal: 12,
+    paddingVertical: 24,
+    borderRadius: 12,
+    marginVertical: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textCart: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#253B6E",
+  },
+  priceCart: {
+    fontSize: 26,
+    marginTop: 22,
+    fontWeight: "bold",
+    color: "#253B6E",
+  },
+  wrapperForm: {
+    padding: 12,
+  },
+  wrapperInput: {
+    marginVertical: 12,
+  },
+  wrapperEmpty: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  wrapperDescription: {
+    backgroundColor: "#D2ECF9",
+    padding: 12,
+    borderRadius: 12,
+  },
+  textDescription: {
+    fontSize: 13,
+    color: "#253B6E",
+    textAlign: "justify",
+  },
+
+  imagePayment: {
+    width: width * 0.2,
+    height: 40,
+    resizeMode: "contain",
+  },
+  paymentImageWrapper: {
+    width: width / 3 - 35,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 10,
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  paymentWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginVertical: 18,
+    marginHorizontal: 18,
+    paddingHorizontal: 12,
+    justifyContent: "center",
+    backgroundColor: "#D2ECF9",
+    borderRadius: 12,
+  },
+  wrapperFooter: {
+    marginVertical: 12,
   },
 });

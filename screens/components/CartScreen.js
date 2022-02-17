@@ -1,29 +1,41 @@
 import {
   Image,
   ScrollView,
-  StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import styles from "../../styles/Styles";
 
-const CartScreen = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [dataCart, setDataCart] = useState([]);
-  const [total, setTotal] = useState(0);
+import EmptyCart from "./cart/Empty";
+import { useNavigation } from "@react-navigation/native";
+import Footer from "./footer/Footer";
 
-  //fecth data from asyncstorage
+const CartScreen = (props) => {
+  const navigation = useNavigation();
+
+  const [nickname, setNickname] = useState("");
+  const [idGame, setIdgame] = useState("");
+
+  //get banner from api.belajarreactnative.com/top-up.json
+  const [isLoading, setIsLoading] = useState(true);
+  const [dataGames, setDataGames] = useState([]);
+
+  //add data to firebase
+
   const fetchData = async () => {
-    const dataCart = await AsyncStorage.getItem("cart");
-    if (dataCart !== null) {
-      const cart = JSON.parse(dataCart);
-      setDataCart(cart);
-      setIsLoading(false);
-    }
+    const url = "https://api.belajarreactnative.com/top-up.json";
+    return fetch(url)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setDataGames(responseJson.listGames);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   useEffect(() => {
@@ -31,49 +43,91 @@ const CartScreen = () => {
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+    >
       <View style={styles.container}>
-        {isLoading ? (
-          <View style={styles.wrapperLoading}>
-            <Text style={styles.textLoading}>Loading...</Text>
+        {/* render if have data in props.route.params.itemCart*/}
+        {props.route.params ? (
+          <View style={styles.wrapperCart}>
+            {isLoading ? (
+              <View style={styles.wrapperLoading}>
+                <Text style={styles.textLoading}>Loading...</Text>
+              </View>
+            ) : (
+              dataGames.map((item, index) => {
+                if (item.id === props.route.params.itemCart.category) {
+                  return (
+                    <View key={index}>
+                      <Text style={styles.titleHome}>{item.name}</Text>
+                      <Image
+                        source={{
+                          uri: item.banner,
+                        }}
+                        style={styles.imageBanner}
+                      />
+                      <View style={styles.wrapperDescription}>
+                        <Text style={styles.textDescription}>
+                          {item.description}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                }
+              })
+            )}
+
+            <View style={styles.cartWrapper}>
+              <Text style={styles.textCart}>
+                Kamu membeli,{" "}
+                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                  {props.route.params.itemCart.items}
+                </Text>
+              </Text>
+              <Text style={styles.priceCart}>
+                Rp. {props.route.params.itemCart.price}
+              </Text>
+            </View>
+
+            <View style={styles.wrapperForm}>
+              <Text style={styles.textCart}>Lengkapi data game Kamu</Text>
+
+              <View style={styles.wrapperInput}>
+                <TextInput
+                  placeholder="Nickname Kamu"
+                  value={nickname}
+                  onChangeText={(text) => setNickname(text)}
+                  style={styles.input}
+                />
+                <TextInput
+                  placeholder="ID Game Kamu (ID Server)"
+                  value={idGame}
+                  onChangeText={(text) => setIdgame(text)}
+                  style={styles.input}
+                />
+              </View>
+
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  //navigate to Home
+                  onPress={() => navigation.navigate("Home")}
+                  style={styles.buttonStyle}
+                >
+                  <Text style={styles.buttonText}>Pesan Sekarang</Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.textQA}>
+                Jangan sampai salah isi ya, segala transaksi yang sudah masuk
+                kedalam sistem tidak bisa di batalkan.
+              </Text>
+            </View>
           </View>
         ) : (
-          <View style={styles.wrapper}>
-            <Text style={styles.title}>Cart</Text>
-            {dataCart.map((item, index) => {
-              return (
-                <View key={index} style={styles.wrapperItem}>
-                  <View style={styles.wrapperImage}>
-                    <Image
-                      style={styles.icoItem}
-                      resizeMode="stretch"
-                      source={{ uri: item.icon }}
-                    />
-                  </View>
-                  <View style={styles.wrapperText}>
-                    <Text style={styles.text}>{item.items}</Text>
-                    <Text style={styles.text}>{item.price}</Text>
-                  </View>
-                  <View style={styles.wrapperButton}>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => {
-                        const cart = dataCart.filter((item) => {
-                          return item.id !== item.id;
-                        });
-                        setDataCart(cart);
-                        AsyncStorage.setItem("cart", JSON.stringify(cart));
-                      }}
-                    >
-                      <Text style={styles.textButton}>Delete</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
+          <EmptyCart />
         )}
       </View>
+      <Footer />
     </ScrollView>
   );
 };
