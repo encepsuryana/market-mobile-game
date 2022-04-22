@@ -13,7 +13,7 @@ const AccountScreen = () => {
     authentication
       .signOut()
       .then(() => {
-        navigation.replace("Login");
+        navigation.replace("Started");
       })
       .catch((error) => alert(error.message));
   };

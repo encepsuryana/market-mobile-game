@@ -4,14 +4,17 @@ import styles from "../../../styles/Styles";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+import HeaderScreen from "../header/HeaderScreen";
+import Banner from "../home/Banner";
+import Icons from "react-native-vector-icons/MaterialIcons";
 
 const Empty = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
+      <HeaderScreen />
+      <Banner />
       <View style={styles.wrapper}>
-        <Text style={styles.title}>Oops...</Text>
-
         <View style={styles.cartWrapper}>
           <Icon
             name="cart-remove"
@@ -20,8 +23,8 @@ const Empty = () => {
             style={{ marginBottom: 12 }}
           />
           <Text style={styles.textCart}>Cart kamu kosong nih :( </Text>
-          <Text style={styles.textQA}>
-            Jangan biarkan item yang kamu inginkan kehabisan ya..{" "}
+          <Text style={styles.descCart}>
+            Jangan biarkan item yang kamu inginkan kehabisan ya..
           </Text>
         </View>
 
@@ -31,7 +34,15 @@ const Empty = () => {
             onPress={() => navigation.navigate("Home")}
             style={styles.buttonStyle}
           >
-            <Text style={styles.buttonText}>Belanja Sekarang!</Text>
+            <View style={styles.buttonIcons}>
+              <Icons
+                name="shopping-cart"
+                style={{ marginRight: 12 }}
+                size={24}
+                color="#fff"
+              />
+              <Text style={styles.buttonText}>Belanja Sekarang</Text>
+            </View>
           </TouchableOpacity>
         </View>
       </View>

@@ -25,7 +25,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.containerFooter}>
       <View style={styles.paymentWrapper}>
         <View style={styles.wrapperFooter}>
           <Text style={styles.textDescription}>

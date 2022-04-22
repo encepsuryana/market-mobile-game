@@ -1,6 +1,12 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
 
@@ -9,26 +15,31 @@ import db from "../../../firebase/Config";
 
 const GameList = () => {
   //fetch game list from api.belajarreactnative.com/top-up.json
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [dataGames, setDataGames] = useState([]);
   const [dataTopup, setDataTopup] = useState([]);
   const [selectCategorie, setSelectCategorie] = useState(1);
-  const [dataCart, setDataCart] = useState([]);
+  // const [dataCart, setDataCart] = useState([]);
 
   const navigation = useNavigation();
 
   const fetchData = async () => {
-    const url = "https://api.belajarreactnative.com/top-up.json";
-    return fetch(url)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setDataGames(responseJson.listGames);
-        setDataTopup(responseJson.listTopups);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    setIsLoading(true);
+    //delay
+    setTimeout(() => {
+      try {
+        const url = "https://api.belajarreactnative.com/top-up.json";
+        return fetch(url)
+          .then((response) => response.json())
+          .then((responseJson) => {
+            setDataGames(responseJson.listGames);
+            setDataTopup(responseJson.listTopups);
+            setIsLoading(false);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    }, 1800);
   };
 
   useEffect(() => {
@@ -42,21 +53,24 @@ const GameList = () => {
       items: item.items,
       price: item.price,
       category: item.category,
-      icon: item.icon,
+      // icon: item.icon,
     };
 
     navigation.navigate("Cart", {
       itemCart: itemCart,
     });
-
-    console.log(itemCart);
+    // console.log(itemCart);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.wrapperCategories}>
         <Text style={styles.titleCategories}>List Games</Text>
-        <ScrollView horizontal={true}>
+        <ScrollView
+          horizontal={true}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        >
           {isLoading ? (
             <View style={styles.wrapperLoading}>
               <Text style={styles.textLoading}>Loading...</Text>
@@ -81,8 +95,10 @@ const GameList = () => {
             })
           )}
         </ScrollView>
+      </View>
 
-        {/* Render List Topup */}
+      {/* Render List Topup */}
+      <View style={styles.itemTopup}>
         <View style={styles.wrapperTopupItems}>
           {isLoading ? (
             <View style={styles.wrapperLoading}>
@@ -98,10 +114,11 @@ const GameList = () => {
                       style={styles.ItemStyle}
                       onPress={() => addToCart(item)}
                     >
-                      {dataGames.map((list) => {
+                      {dataGames.map((list, index) => {
                         if (list.id === item.category) {
                           return (
                             <Image
+                              key={index}
                               style={styles.icoItem}
                               source={{ uri: list.icon }}
                             />
@@ -114,7 +131,12 @@ const GameList = () => {
                         </Text>
 
                         <Text numberOfLines={1} style={styles.topupPrice}>
-                          Rp. {item.price}
+                          {/* number format */}
+                          {new Intl.NumberFormat("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            maximumFractionDigits: 0,
+                          }).format(item.price)}
                         </Text>
                       </View>
                     </TouchableOpacity>

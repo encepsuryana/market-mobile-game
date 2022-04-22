@@ -7,6 +7,8 @@ import GameList from "./home/GameList";
 import Footer from "./footer/Footer";
 
 const HomeScreen = () => {
+  //disable back screen
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
