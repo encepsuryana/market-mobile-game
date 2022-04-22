@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { SafeAreaView, Platform, StatusBar, LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -8,30 +9,17 @@ import Login from "./screens/LoginScreen";
 import Register from "./screens/RegisterScreen";
 import Started from "./screens/StartedScreen";
 import EmptyCart from "./screens/components/cart/Empty";
-import React, { useEffect } from "react";
-import { authentication } from "./firebase/Config";
-import Transaksi from "./screens/components/transaksi";
 import Sukses from "./screens/components/Sukses";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
-  LogBox.ignoreLogs(["AsyncStorage: ..."]);
+
   useEffect(() => {
     if (Platform.OS === "android") {
       StatusBar.setBackgroundColor("#F2F4F7");
     } else {
       StatusBar.setBarStyle("dark-content");
     }
-
-    //check if user is logged in
-    const unsubcribe = authentication.onAuthStateChanged((user) => {
-      if (user) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return unsubcribe;
   }, []);
 
   return (
@@ -71,12 +59,6 @@ export default function App() {
             name="EmptyCart"
             options={{ headerShown: false }}
             component={EmptyCart}
-          />
-
-          <Stack.Screen
-            name="Transaksi"
-            options={{ headerShown: false }}
-            component={Transaksi}
           />
 
           <Stack.Screen

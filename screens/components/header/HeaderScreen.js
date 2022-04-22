@@ -11,23 +11,16 @@ const HeaderScreen = () => {
 
   //get name and uid from users collection in firestore base on email
   const getUser = async () => {
-    setIsLoading(true);
     const user = query(
       collection(db, "users"),
       where("email", "==", authentication.currentUser.email)
     );
 
     const getUser = await getDocs(user);
-    //delay 2 second
-    setTimeout(() => {
-      getUser.forEach((doc) => {
-        // console.log(doc.data().name);
-        // console.log(uid);
-        setUser(doc.data().name);
-        setUid(uid);
-      });
-      setIsLoading(false);
-    }, 1800);
+    getUser.forEach((doc) => {
+      setUser(doc.data().name);
+      setUid(uid);
+    });
   };
 
   useEffect(() => {
@@ -35,14 +28,10 @@ const HeaderScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={{ height: 50 }}>
       <View style={styles.textContainerHome}>
         <Text style={styles.titleHome}>
           Hi, {isLoading ? "Loading..." : user}
-        </Text>
-
-        <Text style={{ color: "#253B6E", marginTop: 12 }}>
-          Mau topup game apa nih? lagi ada promo sekarang loh
         </Text>
       </View>
     </View>

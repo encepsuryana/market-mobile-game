@@ -153,7 +153,6 @@ export default StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: height * 0.1,
   },
-  buttonCartContainer: {},
   textRegister: {
     marginLeft: 5,
     color: "#E43A19",
@@ -162,7 +161,8 @@ export default StyleSheet.create({
 
   wrapperBanner: {
     alignItems: "center",
-    marginVertical: -20,
+    marginVertical: -30,
+    paddingBottom: 20,
   },
 
   Categories: {
@@ -174,6 +174,7 @@ export default StyleSheet.create({
     fontWeight: "bold",
     color: "#253B6E",
     paddingHorizontal: 10,
+    marginVertical: 8,
   },
   wrapperCategories: {
     paddingRight: -52,

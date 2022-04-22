@@ -73,7 +73,16 @@ const Sukses = (props) => {
                     : {props.route.params.dataTransaksi.id_game}
                   </Text>
                   <Text numberOfLines={1} style={styles.textDetailTransaksi}>
-                    : {props.route.params.dataTransaksi.price}
+                    :{" "}
+                    {Platform.OS === "android" ? (
+                      <Text>Rp. {props.route.params.dataTransaksi.price}</Text>
+                    ) : (
+                      new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(props.route.params.dataTransaksi.price)
+                    )}
                   </Text>
                   <Text numberOfLines={1} style={styles.textDetailTransaksi}>
                     : {props.route.params.dataTransaksi.payment}

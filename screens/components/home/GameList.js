@@ -10,8 +10,11 @@ import React, { useEffect, useState } from "react";
 import styles from "../../../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
 
+import { dataAPI } from "../../API";
+
 //import db firestore
 import db from "../../../firebase/Config";
+import { Platform } from "react-native-web";
 
 const GameList = () => {
   //fetch game list from api.belajarreactnative.com/top-up.json
@@ -19,47 +22,55 @@ const GameList = () => {
   const [dataGames, setDataGames] = useState([]);
   const [dataTopup, setDataTopup] = useState([]);
   const [selectCategorie, setSelectCategorie] = useState(1);
-  // const [dataCart, setDataCart] = useState([]);
+
+  const [namaGame, setNamaGame] = useState("");
+  const [banner, setBanner] = useState("");
+  const [deskripsi, setDeskripsi] = useState("");
 
   const navigation = useNavigation();
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    //delay
-    setTimeout(() => {
+  useEffect(() => {
+    const getData = () => {
+      setIsLoading(true);
       try {
-        const url = "https://api.belajarreactnative.com/top-up.json";
-        return fetch(url)
-          .then((response) => response.json())
-          .then((responseJson) => {
-            setDataGames(responseJson.listGames);
+        dataAPI().then((responseJson) => {
+          setDataGames(responseJson.listGames),
             setDataTopup(responseJson.listTopups);
-            setIsLoading(false);
-          });
+        });
       } catch (error) {
         console.log(error);
       }
-    }, 1800);
-  };
+      setIsLoading(false);
+    };
 
-  useEffect(() => {
-    fetchData();
+    getData();
   }, []);
 
-  //get item.id, item.items, item.price, item.category, item.icon from dataGames
   const addToCart = (item) => {
     const itemCart = {
       id: item.id,
       items: item.items,
       price: item.price,
       category: item.category,
-      // icon: item.icon,
+      namaGame: namaGame,
+      banner: banner,
+      deskripsi: deskripsi,
     };
+
+    dataGames.map(async (data) => {
+      // if data.id === item.category set to state
+      if (data.id === item.category) {
+        setNamaGame(data.nama);
+        setBanner(data.banner);
+        setDeskripsi(data.description);
+      }
+    });
 
     navigation.navigate("Cart", {
       itemCart: itemCart,
     });
-    // console.log(itemCart);
+
+    console.log(itemCart);
   };
 
   return (
@@ -132,11 +143,8 @@ const GameList = () => {
 
                         <Text numberOfLines={1} style={styles.topupPrice}>
                           {/* number format */}
-                          {new Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                            maximumFractionDigits: 0,
-                          }).format(item.price)}
+                          {/* if android */}
+                          <Text>Rp. {item.price}</Text>
                         </Text>
                       </View>
                     </TouchableOpacity>

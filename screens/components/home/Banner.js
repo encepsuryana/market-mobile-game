@@ -3,26 +3,27 @@ import React, { useEffect, useState } from "react";
 import styles from "../../../styles/Styles";
 import { SliderBox } from "react-native-image-slider-box";
 
+import { dataAPI } from "../../API";
+
 const Banner = () => {
   //fetch Data Banner from api.belajarreactnative.com/top-up.json
   const [isLoading, setIsLoading] = useState(true);
   const [dataBanner, setDataBanner] = useState([]);
 
-  const fetchData = async () => {
-    const url = "https://api.belajarreactnative.com/top-up.json";
-    return fetch(url)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setDataBanner(responseJson.banners);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   useEffect(() => {
-    fetchData();
+    const getData = () => {
+      setIsLoading(true);
+      try {
+        dataAPI().then((responseJson) => {
+          setDataBanner(responseJson.banners);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      setIsLoading(false);
+    };
+
+    getData();
   }, []);
 
   return (
@@ -52,6 +53,16 @@ const Banner = () => {
             </View>
           )}
         </View>
+      </View>
+      <View
+        style={{
+          marginTop: -20,
+          marginHorizontal: 25,
+        }}
+      >
+        <Text style={{ color: "#253B6E", marginBottom: 10 }}>
+          Mau topup game apa nih? lagi ada promo sekarang loh
+        </Text>
       </View>
     </View>
   );
