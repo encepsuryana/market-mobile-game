@@ -20,7 +20,6 @@ const StartedScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   //onclick delay 2 second activity indicator
-
   const toLogin = () => {
     setIsLoading(true);
     setTimeout(() => {
@@ -34,12 +33,13 @@ const StartedScreen = () => {
       if (user) {
         console.log(user.email, " is signed in.");
         navigation.replace("Main");
+      } else {
+        console.log("user is not signed in");
+        // getData();
       }
     });
     return unsubcribe;
   }, []);
-
-  //onclick loading
 
   return (
     <View style={styles.container}>

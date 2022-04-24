@@ -5,10 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "../../styles/Styles";
+
+import { dataAPI } from "../API";
 
 import EmptyCart from "./cart/Empty";
 import { useNavigation } from "@react-navigation/native";
@@ -24,43 +27,125 @@ import {
   addDoc,
   Timestamp,
 } from "firebase/firestore";
+import NumberFormat from "react-number-format";
 
 const CartScreen = (props) => {
   const navigation = useNavigation();
+  const nicknameRef = useRef();
+  const idGameRef = useRef();
 
+  const [idTransaksi, setIdTransaksi] = useState("");
   const [nickname, setNickname] = useState("");
   const [idGame, setIdgame] = useState("");
   const [nama, setNama] = useState("");
   const [email, setEmail] = useState("");
   const [noTelp, setNoTelp] = useState("");
   const [pembayaran, setPembayaran] = useState([]);
-  const [game, setGame] = useState("");
   const [metodePembayaran, setMetodePembayaran] = useState("");
-
-  //get banner from api.belajarreactnative.com/top-up.json
   const [isLoading, setIsLoading] = useState(false);
   const [isTransaksi, setIsTransaksi] = useState(false);
-  const [dataGames, setDataGames] = useState([]);
+  const [isEmpety, setIsEmpety] = useState(false);
 
-  const DataUser = async () => {
-    const user = query(
-      collection(db, "users"),
-      where("email", "==", authentication.currentUser.email)
-    );
+  const collectData = async () => {
+    setIsLoading(true);
+    try {
+      const user = query(
+        collection(db, "users"),
+        where("email", "==", authentication.currentUser.email)
+      );
 
-    const getUser = await getDocs(user);
+      const getUser = await getDocs(user);
 
-    getUser.forEach((doc) => {
-      setNama(doc.data().name);
-      setEmail(doc.data().email);
-      setNoTelp(doc.data().phone);
-    });
+      getUser.forEach((doc) => {
+        setNama(doc.data().name);
+        setEmail(doc.data().email);
+        setNoTelp(doc.data().phone);
+      });
+
+      dataAPI().then((responseJson) => {
+        setPembayaran(responseJson.listPayments);
+        setIsLoading(false);
+      });
+
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+
+    //function generate unique id
+    function generateUUID() {
+      var d = new Date();
+      var year = d.getFullYear();
+      var month = d.getMonth() + 1;
+      var day = d.getDate();
+
+      var hour = d.getHours();
+      var min = d.getMinutes();
+      var sec = d.getSeconds();
+
+      var uuid =
+        "INV-" +
+        month +
+        day +
+        year +
+        hour +
+        min +
+        sec +
+        "xxxxxxxxxxx".replace(/[xy]/g, function (c) {
+          var r = (d + Math.random() * 16) % 16 | 0;
+          d = Math.floor(d / 16);
+          return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+        });
+      return uuid;
+    }
+
+    setIdTransaksi(generateUUID());
   };
 
   const setTransaksi = async () => {
-    setIsTransaksi(true);
+    //validate is nickname is empty
+    if (nickname === "") {
+      Alert.alert("Top up", "Nickname tidak boleh kosong", [
+        {
+          text: "OK",
+          onPress: () => {
+            nicknameRef.current.focus();
+          },
+        },
+      ]);
+      return;
+    }
 
+    //validate is idGame is empty
+    if (idGame === "") {
+      Alert.alert("Top up", "ID Game tidak boleh kosong", [
+        {
+          text: "OK",
+          onPress: () => {
+            idGameRef.current.focus();
+          },
+        },
+      ]);
+      return;
+    }
+
+    //validate is metodePembayaran is empty
+    if (metodePembayaran === "") {
+      Alert.alert(
+        "Top up",
+        "Silahkan pilih Metode Pembayaran terlebih dahulu",
+        [
+          {
+            text: "OK",
+          },
+        ]
+      );
+      return;
+    }
+
+    setIsTransaksi(true);
     const dataTransaksi = {
+      id: idTransaksi,
       name: nama,
       email: email,
       phone: noTelp,
@@ -71,7 +156,7 @@ const CartScreen = (props) => {
       createdAt: Timestamp.now(),
       nickname: nickname,
       id_game: idGame,
-      game: game,
+      game: props.route.params.itemCart.namaGame,
     };
 
     setTimeout(() => {
@@ -98,36 +183,9 @@ const CartScreen = (props) => {
     }, 1800);
   };
 
-  const fetchData = async () => {
-    const url = "https://api.belajarreactnative.com/top-up.json";
-    try {
-      const response = await fetch(url);
-      const responseJson = await response.json();
-      setDataGames(responseJson.listGames);
-      setPembayaran(responseJson.listPayments);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const data_game = () => {
-    dataGames.map((item) => {
-      if (item.id === props.route.params.itemCart.category) {
-        setGame(item.name);
-        console.log(game);
-      }
-    });
-  };
-
   useEffect(() => {
-    fetchData();
-    DataUser();
-    data_game();
-
-    setNickname("");
-    setIdgame("");
-    setMetodePembayaran("");
+    collectData();
+    console.log(idTransaksi);
   }, []);
 
   //onPress change text from pembayaran
@@ -136,10 +194,10 @@ const CartScreen = (props) => {
   };
 
   const removeCart = () => {
-    setIsLoading(true);
+    setIsEmpety(true);
     setTimeout(() => {
       navigation.navigate("Cart");
-      setIsLoading(false);
+      setIsEmpety(false);
     }, 800);
   };
 
@@ -158,46 +216,40 @@ const CartScreen = (props) => {
                   <Text style={styles.textLoading}>Loading...</Text>
                 </View>
               ) : (
-                dataGames.map((item, index) => {
-                  if (item.id === props.route.params.itemCart.category) {
-                    return (
-                      <View key={index}>
-                        <Text style={styles.titleHome}>{item.name}</Text>
-                        <Image
-                          source={{
-                            uri: item.banner,
-                          }}
-                          style={styles.imageBanner}
-                        />
-                        <View style={styles.wrapperDescription}>
-                          <Text style={styles.textDescription}>
-                            {item.description}
-                          </Text>
-                        </View>
-                      </View>
-                    );
-                  }
-                })
+                <View>
+                  <Text style={styles.titleHome}>
+                    {props.route.params.itemCart.namaGame}
+                  </Text>
+                  <Image
+                    source={{
+                      uri: props.route.params.itemCart.banner,
+                    }}
+                    style={styles.imageBanner}
+                  />
+                  <View style={styles.wrapperDescription}>
+                    <Text style={styles.textDescription}>
+                      {props.route.params.itemCart.deskripsi}
+                    </Text>
+                  </View>
+                </View>
               )}
 
               <View style={styles.cartWrapper}>
                 <Text style={styles.textCart}>
                   Kamu membeli,{" "}
-                  <Text style={{ fontWeight: "bold", fontSize: 26 }}>
+                  <Text style={{ fontWeight: "bold", fontSize: 28 }}>
                     {props.route.params.itemCart.items}
                   </Text>
                 </Text>
-                <Text style={styles.priceCart}>
-                  {Platform.OS === "android" ? (
-                    <Text>Rp. {props.route.params.itemCart.price}</Text>
-                  ) : (
-                    new Intl.NumberFormat("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                      maximumFractionDigits: 0,
-                    }).format(props.route.params.itemCart.price)
+                <NumberFormat
+                  value={props.route.params.itemCart.price}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"Rp. "}
+                  renderText={(value) => (
+                    <Text style={styles.priceCart}>{value}</Text>
                   )}
-                </Text>
+                />
               </View>
 
               <View style={styles.wrapperForm}>
@@ -208,12 +260,21 @@ const CartScreen = (props) => {
                     value={nickname}
                     onChangeText={(text) => setNickname(text)}
                     style={styles.input}
+                    ref={nicknameRef}
+                    returnKeyType="next"
+                    blurOnSubmit={false}
+                    onSubmitEditing={() => {
+                      idGameRef.current.focus();
+                    }}
                   />
                   <TextInput
                     placeholder="46637477(2062)"
                     value={idGame}
                     onChangeText={(text) => setIdgame(text)}
                     style={styles.input}
+                    ref={idGameRef}
+                    returnKeyType="done"
+                    blurOnSubmit={true}
                   />
                   <Text style={styles.textQA}>
                     Jangan sampai salah isi ya, segala transaksi yang sudah
@@ -289,14 +350,14 @@ const CartScreen = (props) => {
                   )}
 
                   <TouchableOpacity
-                    onPress={removeCart}
+                    onPress={() => removeCart()}
                     style={styles.buttonSecondaryStyle}
                   >
                     <View style={styles.buttonIcons}>
-                      {isLoading ? (
+                      {isEmpety ? (
                         <ActivityIndicator
                           style={{ marginRight: 12 }}
-                          size="small"
+                          size={24}
                           color="##E43A19"
                         />
                       ) : (

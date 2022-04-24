@@ -97,19 +97,43 @@ const RegisterScreen = () => {
     setIsLoading(true);
     setTimeout(() => {
       try {
-        addDoc(collection(db, "users"), {
-          name: name,
-          email: email,
-          phone: phone,
-          created: Timestamp.now(),
-        });
-
         createUserWithEmailAndPassword(authentication, email, password)
           .then((userCredentials) => {
             const user = userCredentials.user;
             // console.log("Logged in with: ", user.email);
+            addDoc(collection(db, "users"), {
+              name: name,
+              email: email,
+              phone: phone,
+              created: Timestamp.now(),
+            });
           })
-          .catch((error) => alert(error.message));
+          .catch((error) => {
+            // if email already exists
+            if (error.code === "auth/email-already-in-use") {
+              Alert.alert("Register", "Email sudah terdaftar", [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    //focus on email input
+                    emailRef.current.focus();
+                  },
+                },
+              ]);
+            }
+            // if password is too short
+            if (error.code === "auth/weak-password") {
+              Alert.alert("Register", "Password terlalu pendek", [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    //focus on password input
+                    passwordRef.current.focus();
+                  },
+                },
+              ]);
+            }
+          });
       } catch (error) {
         console.log("Register Error: ", error);
       }

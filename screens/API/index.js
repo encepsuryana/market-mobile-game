@@ -1,4 +1,5 @@
-import { authentication } from "../../firebase/Config";
+import { authentication, db } from "../../firebase/Config";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 
 // data api
 export const dataAPI = async () => {

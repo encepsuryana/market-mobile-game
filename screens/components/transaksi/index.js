@@ -4,8 +4,6 @@ import styles from "../../../styles/Styles";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import HeaderScreen from "../header/HeaderScreen";
-import Banner from "../home/Banner";
 import Icons from "react-native-vector-icons/MaterialIcons";
 
 const Transaksi = () => {
@@ -16,8 +14,6 @@ const Transaksi = () => {
       showsHorizontalScrollIndicator={false}
     >
       <View style={styles.container}>
-        <HeaderScreen />
-        <Banner />
         <View style={styles.wrapper}>
           <View style={styles.cartWrapper}>
             <Icon

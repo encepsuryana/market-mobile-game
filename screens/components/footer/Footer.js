@@ -2,26 +2,18 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import styles from "../../../styles/Styles";
 
+import { dataAPI } from "../../API";
+
 const Footer = () => {
   //get data payment from api.belajarreactnative.com/payment.json
   const [isLoading, setIsLoading] = useState(true);
   const [dataPayment, setDataPayment] = useState([]);
 
-  const fetchData = async () => {
-    const url = "https://api.belajarreactnative.com/top-up.json";
-    return fetch(url)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setDataPayment(responseJson.listPayments);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   useEffect(() => {
-    fetchData();
+    dataAPI().then((responseJson) => {
+      setDataPayment(responseJson.listPayments);
+      setIsLoading(false);
+    });
   }, []);
 
   return (

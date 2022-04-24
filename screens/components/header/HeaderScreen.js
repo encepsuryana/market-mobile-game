@@ -11,16 +11,22 @@ const HeaderScreen = () => {
 
   //get name and uid from users collection in firestore base on email
   const getUser = async () => {
-    const user = query(
-      collection(db, "users"),
-      where("email", "==", authentication.currentUser.email)
-    );
+    setIsLoading(true);
+    try {
+      const user = query(
+        collection(db, "users"),
+        where("email", "==", authentication.currentUser.email)
+      );
 
-    const getUser = await getDocs(user);
-    getUser.forEach((doc) => {
-      setUser(doc.data().name);
-      setUid(uid);
-    });
+      const getUser = await getDocs(user);
+      getUser.forEach((doc) => {
+        setUser(doc.data().name);
+        setUid(uid);
+      });
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

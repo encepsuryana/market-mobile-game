@@ -75,7 +75,33 @@ const LoginScreen = () => {
           const user = userCredentials.user;
           console.log("Logged in with: ", user.email);
         })
-        .catch((error) => alert(error.message));
+        .catch((error) => {
+          //if email not found
+          if (error.code === "auth/user-not-found") {
+            Alert.alert("Login", "Email tidak terdaftar", [
+              {
+                text: "OK",
+                onPress: () => {
+                  //focus on email input
+                  emailRef.current.focus();
+                },
+              },
+            ]);
+          }
+
+          //if password is incorrect
+          if (error.code === "auth/wrong-password") {
+            Alert.alert("Login", "Password salah", [
+              {
+                text: "OK",
+                onPress: () => {
+                  //focus on password input
+                  passwordRef.current.focus();
+                },
+              },
+            ]);
+          }
+        });
       setIsLoading(false);
     }, 1800);
   };
@@ -124,6 +150,7 @@ const LoginScreen = () => {
                 ref={emailRef}
                 onSubmitEditing={() => passwordRef.current.focus()}
                 blurOnSubmit={false}
+                keyboardType="email-address"
               />
               <TextInput
                 placeholder="*********"

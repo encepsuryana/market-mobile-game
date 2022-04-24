@@ -18,6 +18,7 @@ import HeaderScreen from "../header/HeaderScreen";
 import Banner from "../home/Banner";
 import Icons from "react-native-vector-icons/MaterialIcons";
 import Footer from "../footer/Footer";
+import NumberFormat from "react-number-format";
 
 const Sukses = (props) => {
   const navigation = useNavigation();
@@ -31,14 +32,16 @@ const Sukses = (props) => {
         <Banner />
         <View style={styles.wrapper}>
           <View style={styles.wrapperJudulTransakasi}>
-            <Text style={styles.judulTransaksi}>
-              Topup Game {props.route.params.dataTransaksi.game} Berhasil
-            </Text>
+            <Text style={styles.judulTransaksi}>Topup Game Berhasil</Text>
             <Text style={styles.subJudulTransaksi}>
               Segera Selesaikan transaksi kamu sebelum item kamu kehabisan.
             </Text>
           </View>
           <View style={styles.wrapperTransaksi}>
+            <Text style={styles.titleGame}>
+              {props.route.params.dataTransaksi.game}
+            </Text>
+
             <View style={styles.bodyTransaksi}>
               <View style={styles.wrapperDetailTransaksi}>
                 <View style={styles.wrapperDetailTransaksiLeft}>
@@ -74,15 +77,13 @@ const Sukses = (props) => {
                   </Text>
                   <Text numberOfLines={1} style={styles.textDetailTransaksi}>
                     :{" "}
-                    {Platform.OS === "android" ? (
-                      <Text>Rp. {props.route.params.dataTransaksi.price}</Text>
-                    ) : (
-                      new Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                        maximumFractionDigits: 0,
-                      }).format(props.route.params.dataTransaksi.price)
-                    )}
+                    <NumberFormat
+                      value={props.route.params.dataTransaksi.price}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"Rp. "}
+                      renderText={(value) => <Text>{value}</Text>}
+                    />
                   </Text>
                   <Text numberOfLines={1} style={styles.textDetailTransaksi}>
                     : {props.route.params.dataTransaksi.payment}
@@ -96,6 +97,9 @@ const Sukses = (props) => {
                 </View>
               </View>
             </View>
+            <Text style={styles.invoice}>
+              Invoice: {props.route.params.dataTransaksi.id}
+            </Text>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity

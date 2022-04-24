@@ -147,6 +147,10 @@ export default StyleSheet.create({
     marginVertical: 8,
   },
 
+  buttonCartContainer: {
+    marginVertical: 8,
+  },
+
   buttonContainer: {
     display: "flex",
     alignContent: "stretch",
@@ -248,12 +252,29 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   textCart: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     color: "#253B6E",
   },
+  titleGame: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#253B6E",
+    paddingHorizontal: 8,
+    marginVertical: 8,
+  },
+  invoice: {
+    fontSize: 14,
+    color: "#253B6E",
+    paddingHorizontal: 8,
+    //italic
+    fontStyle: "italic",
+    // center
+    textAlign: "center",
+    marginVertical: 12,
+  },
   priceCart: {
-    fontSize: 32,
+    fontSize: 42,
     marginTop: 22,
     fontWeight: "bold",
     color: "#253B6E",
@@ -324,7 +345,7 @@ export default StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#D2ECF9",
     borderRadius: 12,
-    borderColor: "#E43A19",
+    borderColor: "#D2ECF9",
     borderWidth: 1,
     padding: 12,
   },

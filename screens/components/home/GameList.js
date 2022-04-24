@@ -1,20 +1,13 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import styles from "../../../styles/Styles";
 import { useNavigation } from "@react-navigation/native";
+import { db } from "../../../firebase/Config";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+
+import NumberFormat from "react-number-format";
 
 import { dataAPI } from "../../API";
-
-//import db firestore
-import db from "../../../firebase/Config";
-import { Platform } from "react-native-web";
 
 const GameList = () => {
   //fetch game list from api.belajarreactnative.com/top-up.json
@@ -22,6 +15,7 @@ const GameList = () => {
   const [dataGames, setDataGames] = useState([]);
   const [dataTopup, setDataTopup] = useState([]);
   const [selectCategorie, setSelectCategorie] = useState(1);
+  const [dataGameSekarang, setDataGameSekarang] = useState();
 
   const [namaGame, setNamaGame] = useState("");
   const [banner, setBanner] = useState("");
@@ -29,22 +23,43 @@ const GameList = () => {
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const getData = () => {
-      setIsLoading(true);
-      try {
-        dataAPI().then((responseJson) => {
-          setDataGames(responseJson.listGames),
-            setDataTopup(responseJson.listTopups);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-      setIsLoading(false);
-    };
+  const getData = async () => {
+    setIsLoading(true);
+    try {
+      dataAPI().then((responseJson) => {
+        setDataGames(responseJson.listGames),
+          setDataTopup(responseJson.listTopups);
+      });
 
-    getData();
-  }, []);
+      //set length of dataGames now set to local state
+      setDataGameSekarang(dataGames.length);
+
+      const gameRef = collection(db, "games");
+      getDocs(gameRef).then((doc) => {
+        //check is collection "games" is not exist
+        if (doc.empty) {
+          dataGames.forEach((game) => {
+            addDoc(gameRef, game);
+          });
+        }
+      });
+
+      //get data from collection "games" by selectCategorie and set to local state
+      const gameRef2 = collection(db, "games");
+      const gameRef3 = query(gameRef2, where("id", "==", selectCategorie));
+      getDocs(gameRef3).then((doc) => {
+        doc.forEach((doc) => {
+          setNamaGame(doc.data().name);
+          setBanner(doc.data().banner);
+          setDeskripsi(doc.data().description);
+        });
+      });
+
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const addToCart = (item) => {
     const itemCart = {
@@ -57,15 +72,6 @@ const GameList = () => {
       deskripsi: deskripsi,
     };
 
-    dataGames.map(async (data) => {
-      // if data.id === item.category set to state
-      if (data.id === item.category) {
-        setNamaGame(data.nama);
-        setBanner(data.banner);
-        setDeskripsi(data.description);
-      }
-    });
-
     navigation.navigate("Cart", {
       itemCart: itemCart,
     });
@@ -73,6 +79,11 @@ const GameList = () => {
     console.log(itemCart);
   };
 
+  useEffect(() => {
+    getData();
+
+    setSelectCategorie(selectCategorie);
+  }, [selectCategorie, namaGame, banner, deskripsi]);
   return (
     <View style={styles.container}>
       <View style={styles.wrapperCategories}>
@@ -142,9 +153,14 @@ const GameList = () => {
                         </Text>
 
                         <Text numberOfLines={1} style={styles.topupPrice}>
-                          {/* number format */}
-                          {/* if android */}
-                          <Text>Rp. {item.price}</Text>
+                          <NumberFormat
+                            value={item.price}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            prefix={"Rp. "}
+                            decimalSeparator={"."}
+                            renderText={(value) => <Text>{value}</Text>}
+                          />
                         </Text>
                       </View>
                     </TouchableOpacity>
