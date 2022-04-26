@@ -17,6 +17,7 @@ import {
   getDocs,
   addDoc,
   Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 
 import { useNavigation } from "@react-navigation/native";
@@ -25,6 +26,7 @@ import Banner from "../home/Banner";
 import Icons from "react-native-vector-icons/MaterialIcons";
 import Footer from "../footer/Footer";
 import NumberFormat from "react-number-format";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const TextLeftTransaksi = (props) => {
   return <Text style={styles.textTransaksi}>{props.text}</Text>;
@@ -35,12 +37,44 @@ const TextRightTransaksi = (props) => {
 };
 
 const PaymenteWallet = (props) => {
-  const [nomerAkun, setNomerAkun] = useState("");
+  const navigation = useNavigation();
   const nomerAkunRef = useRef();
+
+  const [nomerAkun, setNomerAkun] = useState("");
+
+  const submitPayment = async () => {
+    if (nomerAkun === "") {
+      Alert.alert("Peringatan", "Nomor akun harus diisi", [
+        {
+          text: "OK",
+          onPress: () => {
+            nomerAkunRef.current.focus();
+          },
+        },
+      ]);
+    } else {
+      //update transaction payment status to true
+      const transactionRef = collection(db, "transaction");
+
+      const transactionRef2 = query(transactionRef, where("id", "==", invoice));
+
+      getDocs(transactionRef2).then((doc) => {
+        doc.forEach((doc) => {
+          updateDoc(transactionRef, doc.id, {
+            status: true,
+            paymentDate: Timestamp.now(),
+          });
+        });
+      });
+    }
+  };
+
+  //validate is number empty
+
   return (
     <View>
       <Text style={styles.textInputPayment}>
-        Silahkan isi Nomor yang menggunakan akun: {props.pay}
+        Silahkan isi Nomor {props.pay} yang sudah terdaftar
       </Text>
       <TextInput
         style={styles.input}
@@ -51,6 +85,24 @@ const PaymenteWallet = (props) => {
         blurOnSubmit={true}
         returnKeyType="done"
       />
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          //navigate to Home
+          onPress={submitPayment}
+          style={styles.buttonStyle}
+        >
+          <View style={styles.buttonIcons}>
+            <Icons
+              name="payment"
+              style={{ marginRight: 12 }}
+              size={24}
+              color="#fff"
+            />
+            <Text style={styles.buttonText}>Bayar Sekarang</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -72,120 +124,140 @@ const PaymentMiniMarket = (props) => {
 };
 
 const Sukses = (props) => {
-  const navigation = useNavigation();
+  const nama = props.route.params.dataTransaksi.name;
+  const email = props.route.params.dataTransaksi.email;
+  const item = props.route.params.dataTransaksi.item;
+  const nickname = props.route.params.dataTransaksi.nickname;
+  const id_game = props.route.params.dataTransaksi.id_game;
+  const price = props.route.params.dataTransaksi.price;
+  const payment = props.route.params.dataTransaksi.payment;
+  const invoice = props.route.params.dataTransaksi.id;
+  const status = props.route.params.dataTransaksi.status;
 
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
     >
-      <View style={styles.container}>
-        <HeaderScreen />
-        <Banner />
-        <View style={styles.wrapper}>
-          <View style={styles.wrapperJudulTransakasi}>
-            <Text style={styles.judulTransaksi}>Topup Game Berhasil</Text>
-            <Text style={styles.subJudulTransaksi}>
-              Segera Selesaikan transaksi kamu sebelum item kamu kehabisan.
-            </Text>
-          </View>
-          <View style={styles.wrapperTransaksi}>
-            <Text style={styles.titleGame}>
-              {props.route.params.dataTransaksi.game}
-            </Text>
+      <KeyboardAwareScrollView enableOnAndroid={true} extraScrollHeight={60}>
+        <View style={styles.container}>
+          <HeaderScreen />
+          <Banner />
+          <View style={styles.wrapperSukses}>
+            <View style={styles.wrapperJudulTransakasi}>
+              <Text style={styles.judulTransaksi}>Topup Game Berhasil</Text>
+              <Text style={styles.subJudulTransaksi}>
+                Segera Selesaikan transaksi kamu sebelum item kamu kehabisan.
+              </Text>
+            </View>
+            <View style={styles.wrapperTransaksi}>
+              <View style={styles.wrapperTextGame}>
+                <Text style={styles.titleGame}>
+                  {props.route.params.dataTransaksi.game}
+                </Text>
+                <Text style={styles.invoice}>{invoice}</Text>
+              </View>
 
-            <View style={styles.bodyTransaksi}>
-              <View style={styles.wrapperDetailTransaksi}>
-                <View style={styles.wrapperDetailTransaksiLeft}>
-                  <TextLeftTransaksi text="Nama" />
-                  <TextLeftTransaksi text="Email" />
-                  <TextLeftTransaksi text="Item" />
-                  <TextLeftTransaksi text="Nickname" />
-                  <TextLeftTransaksi text="Id. Game" />
-                  <TextLeftTransaksi text="Harga" />
-                  <TextLeftTransaksi text="Pembayaran" />
-                  <TextLeftTransaksi text="Status" />
-                </View>
+              <View style={styles.bodyTransaksi}>
+                <View style={styles.wrapperDetailTransaksi}>
+                  <View style={styles.wrapperDetailTransaksiLeft}>
+                    <TextLeftTransaksi text="Nama" />
+                    <TextLeftTransaksi text="Email" />
+                    <TextLeftTransaksi text="Item" />
+                    <TextLeftTransaksi text="Nickname" />
+                    <TextLeftTransaksi text="Id. Game" />
+                    <TextLeftTransaksi text="Harga" />
+                    <TextLeftTransaksi text="Pembayaran" />
+                    <TextLeftTransaksi text="Status" />
+                  </View>
 
-                <View style={styles.wrapperDetailTransaksiRight}>
-                  <TextRightTransaksi
-                    text={props.route.params.dataTransaksi.name}
-                  />
-                  <TextRightTransaksi
-                    text={props.route.params.dataTransaksi.email}
-                  />
-                  <TextRightTransaksi
-                    text={props.route.params.dataTransaksi.item}
-                  />
-                  <TextRightTransaksi
-                    text={props.route.params.dataTransaksi.nickname}
-                  />
-                  <TextRightTransaksi
-                    text={props.route.params.dataTransaksi.id_game}
-                  />
-                  <TextRightTransaksi
-                    text={
-                      <NumberFormat
-                        value={props.route.params.dataTransaksi.price}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        prefix={"Rp. "}
-                        renderText={(value) => <Text>{value}</Text>}
-                      />
-                    }
-                  />
+                  <View style={styles.wrapperDetailTransaksiRight}>
+                    <TextRightTransaksi text={nama} />
+                    <TextRightTransaksi text={email} />
+                    <TextRightTransaksi text={item} />
+                    <TextRightTransaksi text={nickname} />
+                    <TextRightTransaksi text={id_game} />
+                    <TextRightTransaksi
+                      text={
+                        <NumberFormat
+                          value={price}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          prefix={"Rp. "}
+                          renderText={(value) => <Text>{value}</Text>}
+                        />
+                      }
+                    />
 
-                  <TextRightTransaksi
-                    text={props.route.params.dataTransaksi.payment}
-                  />
-                  <TextRightTransaksi
-                    text={
-                      props.route.params.dataTransaksi.status == false
-                        ? "Belum Dibayar"
-                        : "Sudah Dibayar"
-                    }
-                  />
+                    <TextRightTransaksi text={payment} />
+                    <TextRightTransaksi
+                      text={
+                        status == false ? (
+                          <View
+                            style={{
+                              backgroundColor: "red",
+                              //border radius
+                              borderRadius: 10,
+                              paddingVetical: 2,
+                              paddingHorizontal: 10,
+                              height: 20,
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "#fff",
+                              }}
+                            >
+                              Menunggu Pembayaran
+                            </Text>
+                          </View>
+                        ) : (
+                          <View
+                            style={{
+                              backgroundColor: "green",
+                              //border radius
+                              borderRadius: 10,
+                              paddingVetical: 2,
+                              paddingHorizontal: 10,
+                              height: 20,
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "#fff",
+                              }}
+                            >
+                              Selesai
+                            </Text>
+                          </View>
+                        )
+                      }
+                    />
+                  </View>
                 </View>
               </View>
             </View>
-            <Text style={styles.invoice}>
-              Invoice: {props.route.params.dataTransaksi.id}
-            </Text>
-          </View>
 
-          <View style={styles.paymnetWrapper}>
-            {/* render payment method */}
-            {props.route.params.dataTransaksi.payment == "ATM Bersama" ? (
-              <PaymentATMBersama norek="0890201821" />
-            ) : props.route.params.dataTransaksi.payment == "OVO" ||
-              props.route.params.dataTransaksi.payment == "Dana" ||
-              props.route.params.dataTransaksi.payment == "Gopay" ? (
-              <PaymenteWallet pay={props.route.params.dataTransaksi.payment} />
-            ) : (
-              <PaymentMiniMarket minimarket="Mini Market" />
-            )}
-          </View>
-
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              //navigate to Home
-              onPress={() => navigation.navigate("Home")}
-              style={styles.buttonStyle}
-            >
-              <View style={styles.buttonIcons}>
-                <Icons
-                  name="payment"
-                  style={{ marginRight: 12 }}
-                  size={24}
-                  color="#fff"
-                />
-                <Text style={styles.buttonText}>Bayar Sekarang</Text>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.paymnetWrapper}>
+              {/* render payment method */}
+              {payment == "ATM Bersama" ? (
+                <PaymentATMBersama norek="0890201821" />
+              ) : payment == "OVO" ||
+                payment == "Dana" ||
+                payment == "Gopay" ? (
+                <PaymenteWallet pay={payment} />
+              ) : (
+                <PaymentMiniMarket minimarket="Mini Market" />
+              )}
+            </View>
           </View>
         </View>
-      </View>
-      <Footer />
+        <Footer />
+      </KeyboardAwareScrollView>
     </ScrollView>
   );
 };

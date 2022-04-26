@@ -20,6 +20,7 @@ const GameList = () => {
   const [banner, setBanner] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [iconGame, setIconGame] = useState("");
+  const [tile, setTile] = useState("");
 
   const navigation = useNavigation();
 
@@ -50,6 +51,7 @@ const GameList = () => {
           setBanner(doc.data().banner);
           setDeskripsi(doc.data().description);
           setIconGame(doc.data().icon);
+          setTile(doc.data().tile);
         });
       });
 
@@ -69,6 +71,7 @@ const GameList = () => {
       banner: banner,
       deskripsi: deskripsi,
       iconGame: iconGame,
+      tile: tile,
     };
 
     navigation.navigate("Cart", {

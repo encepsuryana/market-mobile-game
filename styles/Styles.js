@@ -136,9 +136,8 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     opacity: 0.2,
     marginVertical: 20,
-    width: "80%",
+    width: "100%",
     display: "flex",
-    alignSelf: "center",
   },
   registerContainer: {
     flexDirection: "row",
@@ -251,6 +250,20 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
+  transactionWrapper: {
+    backgroundColor: "#D2ECF9",
+    padding: 18,
+    borderRadius: 12,
+    marginVertical: 8,
+    flexWrap: "wrap",
+  },
+
+  transactionBody: {
+    flex: 1,
+    flexDirection: "row",
+  },
+
   textCart: {
     fontSize: 22,
     fontWeight: "bold",
@@ -260,24 +273,26 @@ export default StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     color: "#253B6E",
-    paddingHorizontal: 8,
-    marginVertical: 8,
+  },
+  wrapperSukses: {
+    paddingHorizontal: 16,
+    paddingVertical: 32,
   },
   invoice: {
     fontSize: 14,
     color: "#253B6E",
-    paddingHorizontal: 8,
-    //italic
     fontStyle: "italic",
-    // center
-    textAlign: "center",
-    marginVertical: 12,
+    marginTop: 4,
   },
   priceCart: {
     fontSize: 42,
     marginTop: 22,
     fontWeight: "bold",
     color: "#253B6E",
+  },
+  wrapperTextGame: {
+    marginVertical: 8,
+    paddingHorizontal: 8,
   },
   wrapperForm: {
     padding: 12,
@@ -382,7 +397,7 @@ export default StyleSheet.create({
   },
   bodyTransaksi: {
     marginVertical: 8,
-    paddingHorizontal: 8,
+    paddingHorizontal: 22,
     justifyContent: "center",
   },
   judulTransaksi: {
@@ -407,6 +422,11 @@ export default StyleSheet.create({
   },
   wrapperDetailTransaksiRight: {
     width: width / 2 - 30,
+  },
+
+  notPayment: {
+    backgroundColor: "red",
+    color: "red",
   },
 
   wrapperJudulTransakasi: {

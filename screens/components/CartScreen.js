@@ -154,6 +154,7 @@ const CartScreen = (props) => {
       status: false,
       payment: metodePembayaran,
       paymentNumber: "",
+      paymentDate: "",
       createdAt: Timestamp.now(),
       nickname: nickname,
       id_game: idGame,
@@ -163,11 +164,25 @@ const CartScreen = (props) => {
 
     setTimeout(() => {
       //save to firebase and navigate to sukses
-
       const transaksi = addDoc(
         collection(db, "transaction"),
         {
-          dataTransaksi,
+          id: idTransaksi,
+          name: nama,
+          email: email,
+          phone: noTelp,
+          item: props.route.params.itemCart.items,
+          price: props.route.params.itemCart.price,
+          status: false,
+          payment: metodePembayaran,
+          paymentNumber: "",
+          paymentDate: "",
+          createdAt: Timestamp.now(),
+          nickname: nickname,
+          id_game: idGame,
+          game: props.route.params.itemCart.namaGame,
+          iconGame: props.route.params.itemCart.iconGame,
+          tile: props.route.params.itemCart.tile,
         },
         (error) => {
           if (error) {

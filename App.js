@@ -20,6 +20,8 @@ export default function App() {
     } else {
       StatusBar.setBarStyle("dark-content");
     }
+    //remove warning AsyngStorage
+    LogBox.ignoreAllLogs();
   }, []);
 
   return (
