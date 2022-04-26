@@ -6,7 +6,13 @@ import { useNavigation } from "@react-navigation/native";
 import Icons from "react-native-vector-icons/MaterialIcons";
 
 import { authentication, db } from "../../../firebase/Config";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 import NumberFormat from "react-number-format";
 import Footer from "../footer/Footer";
 
@@ -39,6 +45,21 @@ const Transaksi = () => {
   //get realtime data from collection "transaction"
   useEffect(() => {
     getDataTransaction();
+
+    const data = onSnapshot(collection(db, "transaction"), (snapshot) => {
+      const dataTransaksi = snapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+
+      setDataTransaksi(dataTransaksi);
+    });
+
+    return () => {
+      data();
+    };
   }, [authentication.currentUser.email]);
 
   const navigation = useNavigation();
@@ -132,6 +153,7 @@ const Transaksi = () => {
                           height: 20,
                           justifyContent: "center",
                           marginTop: 2,
+                          width: 60,
                         }}
                       >
                         <Text

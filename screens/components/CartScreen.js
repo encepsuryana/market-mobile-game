@@ -34,7 +34,9 @@ const CartScreen = (props) => {
   const nicknameRef = useRef();
   const idGameRef = useRef();
 
+  const [invoice, setInvoice] = useState("");
   const [idTransaksi, setIdTransaksi] = useState("");
+  const [storeIdTransaksi, setStoreIdTransaksi] = useState("");
   const [nickname, setNickname] = useState("");
   const [idGame, setIdgame] = useState("");
   const [nama, setNama] = useState("");
@@ -99,7 +101,7 @@ const CartScreen = (props) => {
       return uuid;
     }
 
-    setIdTransaksi(generateUUID());
+    setInvoice(generateUUID());
   };
 
   const setTransaksi = async () => {
@@ -145,21 +147,7 @@ const CartScreen = (props) => {
 
     setIsTransaksi(true);
     const dataTransaksi = {
-      id: idTransaksi,
-      name: nama,
-      email: email,
-      phone: noTelp,
-      item: props.route.params.itemCart.items,
-      price: props.route.params.itemCart.price,
-      status: false,
-      payment: metodePembayaran,
-      paymentNumber: "",
-      paymentDate: "",
-      createdAt: Timestamp.now(),
-      nickname: nickname,
-      id_game: idGame,
-      game: props.route.params.itemCart.namaGame,
-      iconGame: props.route.params.itemCart.iconGame,
+      invoice: invoice,
     };
 
     setTimeout(() => {
@@ -168,6 +156,7 @@ const CartScreen = (props) => {
         collection(db, "transaction"),
         {
           id: idTransaksi,
+          invoice: invoice,
           name: nama,
           email: email,
           phone: noTelp,
@@ -202,7 +191,13 @@ const CartScreen = (props) => {
 
   useEffect(() => {
     collectData();
+
     console.log(idTransaksi);
+
+    //onload set nickname to empty
+    setNickname("");
+    setIdgame("");
+    setMetodePembayaran("");
   }, []);
 
   //onPress change text from pembayaran

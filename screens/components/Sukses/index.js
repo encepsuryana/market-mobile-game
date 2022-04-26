@@ -15,9 +15,10 @@ import {
   query,
   where,
   getDocs,
-  addDoc,
   Timestamp,
   updateDoc,
+  doc,
+  onSnapshot,
 } from "firebase/firestore";
 
 import { useNavigation } from "@react-navigation/native";
@@ -53,23 +54,21 @@ const PaymenteWallet = (props) => {
         },
       ]);
     } else {
-      //update transaction payment status to true
-      const transactionRef = collection(db, "transaction");
+      //update data transaction status to true
+      const updateTransaksi = doc(
+        db,
+        "transaction", //collection
+        //get id from document
+        props.docId
+      );
 
-      const transactionRef2 = query(transactionRef, where("id", "==", invoice));
-
-      getDocs(transactionRef2).then((doc) => {
-        doc.forEach((doc) => {
-          updateDoc(transactionRef, doc.id, {
-            status: true,
-            paymentDate: Timestamp.now(),
-          });
-        });
+      await updateDoc(updateTransaksi, {
+        status: true,
+        paymentDate: Timestamp.now(),
+        paymentNumber: nomerAkun,
       });
     }
   };
-
-  //validate is number empty
 
   return (
     <View>
@@ -124,15 +123,53 @@ const PaymentMiniMarket = (props) => {
 };
 
 const Sukses = (props) => {
-  const nama = props.route.params.dataTransaksi.name;
-  const email = props.route.params.dataTransaksi.email;
-  const item = props.route.params.dataTransaksi.item;
-  const nickname = props.route.params.dataTransaksi.nickname;
-  const id_game = props.route.params.dataTransaksi.id_game;
-  const price = props.route.params.dataTransaksi.price;
-  const payment = props.route.params.dataTransaksi.payment;
-  const invoice = props.route.params.dataTransaksi.id;
-  const status = props.route.params.dataTransaksi.status;
+  const [isLoading, setIsLoading] = useState(false);
+  const [nama, setNama] = useState("");
+  const [email, setEmail] = useState("");
+  const [item, setItem] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [idGame, setIdGame] = useState("");
+  const [price, setPrice] = useState("");
+  const [payment, setPayment] = useState("");
+  const [invoice, setInvoice] = useState("");
+  const [docId, setDocId] = useState("");
+  const [status, setStatus] = useState(false);
+  const [namaGame, setNamaGame] = useState("");
+
+  const getDatabyIDTransaction = async () => {
+    setIsLoading(true);
+    const transactionID = props.route.params.dataTransaksi.invoice;
+
+    try {
+      const fetchDataTransactionbyID = query(
+        collection(db, "transaction"),
+        where("invoice", "==", transactionID)
+      );
+
+      const getDataTransactionbyID = await getDocs(fetchDataTransactionbyID);
+      getDataTransactionbyID.forEach((doc) => {
+        setNama(doc.data().name);
+        setEmail(doc.data().email);
+        setItem(doc.data().item);
+        setNickname(doc.data().nickname);
+        setIdGame(doc.data().id_game);
+        setPrice(doc.data().price);
+        setPayment(doc.data().payment);
+        setInvoice(doc.data().invoice);
+        setStatus(doc.data().status);
+        setNamaGame(doc.data().game);
+        setDocId(doc.id);
+      });
+
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getDatabyIDTransaction();
+  }, []);
 
   return (
     <ScrollView
@@ -152,9 +189,7 @@ const Sukses = (props) => {
             </View>
             <View style={styles.wrapperTransaksi}>
               <View style={styles.wrapperTextGame}>
-                <Text style={styles.titleGame}>
-                  {props.route.params.dataTransaksi.game}
-                </Text>
+                <Text style={styles.titleGame}>{namaGame}</Text>
                 <Text style={styles.invoice}>{invoice}</Text>
               </View>
 
@@ -176,7 +211,7 @@ const Sukses = (props) => {
                     <TextRightTransaksi text={email} />
                     <TextRightTransaksi text={item} />
                     <TextRightTransaksi text={nickname} />
-                    <TextRightTransaksi text={id_game} />
+                    <TextRightTransaksi text={idGame} />
                     <TextRightTransaksi
                       text={
                         <NumberFormat
@@ -249,7 +284,7 @@ const Sukses = (props) => {
               ) : payment == "OVO" ||
                 payment == "Dana" ||
                 payment == "Gopay" ? (
-                <PaymenteWallet pay={payment} />
+                <PaymenteWallet pay={payment} id={invoice} docId={docId} />
               ) : (
                 <PaymentMiniMarket minimarket="Mini Market" />
               )}
