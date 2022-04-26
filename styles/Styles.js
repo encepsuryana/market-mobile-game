@@ -418,10 +418,18 @@ export default StyleSheet.create({
     color: "#253B6E",
     marginTop: 8,
   },
-  textDetailTransaksi1: {
+  textTransaksi: {
     fontSize: 16,
     color: "#253B6E",
     fontWeight: "bold",
     marginTop: 8,
+  },
+  paymnetWrapper: {
+    marginVertical: 22,
+  },
+  textInputPayment: {
+    fontSize: 16,
+    color: "#253B6E",
+    marginBottom: 12,
   },
 });

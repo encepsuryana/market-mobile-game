@@ -15,11 +15,11 @@ const GameList = () => {
   const [dataGames, setDataGames] = useState([]);
   const [dataTopup, setDataTopup] = useState([]);
   const [selectCategorie, setSelectCategorie] = useState(1);
-  const [dataGameSekarang, setDataGameSekarang] = useState();
 
   const [namaGame, setNamaGame] = useState("");
   const [banner, setBanner] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
+  const [iconGame, setIconGame] = useState("");
 
   const navigation = useNavigation();
 
@@ -30,9 +30,6 @@ const GameList = () => {
         setDataGames(responseJson.listGames),
           setDataTopup(responseJson.listTopups);
       });
-
-      //set length of dataGames now set to local state
-      setDataGameSekarang(dataGames.length);
 
       const gameRef = collection(db, "games");
       getDocs(gameRef).then((doc) => {
@@ -52,6 +49,7 @@ const GameList = () => {
           setNamaGame(doc.data().name);
           setBanner(doc.data().banner);
           setDeskripsi(doc.data().description);
+          setIconGame(doc.data().icon);
         });
       });
 
@@ -70,6 +68,7 @@ const GameList = () => {
       namaGame: namaGame,
       banner: banner,
       deskripsi: deskripsi,
+      iconGame: iconGame,
     };
 
     navigation.navigate("Cart", {
@@ -83,7 +82,7 @@ const GameList = () => {
     getData();
 
     setSelectCategorie(selectCategorie);
-  }, [selectCategorie, namaGame, banner, deskripsi]);
+  }, [selectCategorie, namaGame, banner, deskripsi, iconGame]);
   return (
     <View style={styles.container}>
       <View style={styles.wrapperCategories}>

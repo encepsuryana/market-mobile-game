@@ -153,10 +153,12 @@ const CartScreen = (props) => {
       price: props.route.params.itemCart.price,
       status: false,
       payment: metodePembayaran,
+      paymentNumber: "",
       createdAt: Timestamp.now(),
       nickname: nickname,
       id_game: idGame,
       game: props.route.params.itemCart.namaGame,
+      iconGame: props.route.params.itemCart.iconGame,
     };
 
     setTimeout(() => {
