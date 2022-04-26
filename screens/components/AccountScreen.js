@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import styles from "../../styles/Styles";
 
 import Footer from "./footer/Footer";
+import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const AccountScreen = () => {
   const navigation = useNavigation();
@@ -24,7 +25,15 @@ const AccountScreen = () => {
       <View style={styles.container}>
         <View style={styles.wrapper}>
           <TouchableOpacity onPress={handleSignOut} style={styles.buttonStyle}>
-            <Text style={styles.buttonText}>Sign Out</Text>
+            <View style={styles.buttonIcons}>
+              <Icons
+                name="logout"
+                size={24}
+                color="#fff"
+                style={{ marginRight: 12 }}
+              />
+              <Text style={styles.buttonText}>Keluar</Text>
+            </View>
           </TouchableOpacity>
         </View>
       </View>

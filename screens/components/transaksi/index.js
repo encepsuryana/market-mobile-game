@@ -8,13 +8,12 @@ import Icons from "react-native-vector-icons/MaterialIcons";
 import { authentication, db } from "../../../firebase/Config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import NumberFormat from "react-number-format";
+import Footer from "../footer/Footer";
 
 const Transaksi = () => {
   //fetch data from firebase
   const [isLoading, setIsLoading] = useState(false);
   const [dataTransaksi, setDataTransaksi] = useState([]);
-  const [dataTopup, setDataTopup] = useState([]);
-
   //get data transaction by authentication.currentUser.email
   const getDataTransaction = async () => {
     const data = query(
@@ -72,7 +71,7 @@ const Transaksi = () => {
           {/*Render data transaction*/}
           {dataTransaksi.map((transaction) => {
             return (
-              <View style={styles.transactionWrapper}>
+              <View key={transaction.id} style={styles.transactionWrapper}>
                 <View style={styles.transactionBody} key={transaction.id}>
                   <Image
                     source={{ uri: transaction.tile }}
@@ -108,6 +107,7 @@ const Transaksi = () => {
                           paddingVetical: 2,
                           paddingHorizontal: 10,
                           height: 20,
+                          width: 143,
                           justifyContent: "center",
                           marginTop: 2,
                         }}
@@ -199,6 +199,7 @@ const Transaksi = () => {
             </TouchableOpacity>
           </View>
         </View>
+        <Footer />
       </View>
     </ScrollView>
   );
