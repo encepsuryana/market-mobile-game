@@ -37,6 +37,20 @@ export default StyleSheet.create({
     fontWeight: "bold",
     color: "#253B6E",
   },
+  titleGameCart: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#253B6E",
+    paddingBottom: 10,
+  },
+
+  titleATM: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#253B6E",
+    paddingBottom: 10,
+    textAlign: "center",
+  },
 
   image: {
     resizeMode: "contain",
@@ -47,7 +61,7 @@ export default StyleSheet.create({
     width: "100%",
     height: height * 0.2,
     borderRadius: 12,
-    marginVertical: 12,
+    marginBottom: 12,
   },
 
   buttonStyle: {
@@ -253,7 +267,7 @@ export default StyleSheet.create({
 
   transactionWrapper: {
     backgroundColor: "#D2ECF9",
-    padding: 18,
+    padding: 8,
     borderRadius: 12,
     marginVertical: 8,
     flexWrap: "wrap",
@@ -274,12 +288,20 @@ export default StyleSheet.create({
     fontWeight: "bold",
     color: "#253B6E",
   },
+
   wrapperSukses: {
     paddingHorizontal: 16,
     paddingVertical: 32,
   },
   invoice: {
     fontSize: 14,
+    color: "#253B6E",
+    fontStyle: "italic",
+    marginTop: 4,
+  },
+
+  invoiceATM: {
+    fontSize: 18,
     color: "#253B6E",
     fontStyle: "italic",
     marginTop: 4,
@@ -451,5 +473,66 @@ export default StyleSheet.create({
     fontSize: 16,
     color: "#253B6E",
     marginBottom: 12,
+  },
+
+  imgTransaksi: {
+    width: 90,
+    height: 90,
+    borderRadius: 8,
+  },
+  namaGameTransaksi: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#253B6E",
+    width: width * 0.6,
+  },
+
+  trasaksiInvalid: {
+    backgroundColor: "red",
+    borderRadius: 10,
+    paddingVertical: 2,
+    paddingHorizontal: 10,
+    height: 20,
+    width: 143,
+    justifyContent: "center",
+    marginTop: 2,
+  },
+  transaksiValid: {
+    backgroundColor: "green",
+    //border radius
+    borderRadius: 10,
+    paddingVertical: 2,
+    paddingHorizontal: 10,
+    height: 20,
+    justifyContent: "center",
+    marginTop: 2,
+    width: 60,
+  },
+
+  textTransaksi: {
+    color: "#fff",
+    fontSize: 12,
+  },
+
+  wrapperTransaksiRight: {
+    marginLeft: 20,
+    //center
+    justifyContent: "center",
+  },
+  wrapperDetailTransaksi: {
+    marginTop: 8,
+  },
+
+  textPriceTransaksi: {
+    fontSize: 18,
+    color: "#253B6E",
+    fontWeight: "bold",
+  },
+
+  titleTransaksi: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#253B63",
+    marginLeft: 10,
   },
 });

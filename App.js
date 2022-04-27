@@ -8,7 +8,7 @@ import MainPage from "./screens/MainScreen";
 import Login from "./screens/LoginScreen";
 import Register from "./screens/RegisterScreen";
 import Started from "./screens/StartedScreen";
-import EmptyCart from "./screens/components/cart/Empty";
+import EmptyCart from "./screens/components/Empty/CartEmpty";
 import Sukses from "./screens/components/Sukses";
 
 export default function App() {

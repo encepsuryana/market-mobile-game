@@ -2,42 +2,41 @@ import { Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import styles from "../../../styles/Styles";
 
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 
-const Empty = () => {
+const TransaksiEmpty = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.wrapperCart}>
+        <View style={styles.cartWrapper}>
+          <Text style={styles.textCart}>Yah, Belum ada Transaksi nih :(</Text>
+
+          <Icon
+            name="history"
+            size={100}
+            color="#E43A19"
+            style={{ marginVertical: 12 }}
+          />
+          <Text style={styles.descCart}>
+            Ayok jangan sampai item yang kamu inginkan kehabisan ya..
+          </Text>
+        </View>
         <View
           style={{
             flexDirection: "row",
-            marginBottom: 40,
+            justifyContent: "center",
           }}
         >
-          <Icon name="cart" size={24} color="#253B63" />
           <Text
             style={{
               fontSize: 20,
               fontWeight: "bold",
               color: "#253B63",
-              marginLeft: 10,
             }}
           >
-            Yah, keranjang kamu masih kosong :(
-          </Text>
-        </View>
-        <View style={styles.cartWrapper}>
-          <Icon
-            name="bacteria-outline"
-            size={100}
-            color="#E43A19"
-            style={{ marginBottom: 12 }}
-          />
-          <Text style={styles.textCart}>Amankan Item game Favorit kamu </Text>
-          <Text style={styles.descCart}>
-            Jangan biarkan item yang kamu inginkan kehabisan ya..
+            Meluncur Sekarang
           </Text>
         </View>
 
@@ -49,7 +48,7 @@ const Empty = () => {
           >
             <View style={styles.buttonIcons}>
               <Icon
-                name="cart"
+                name="shopping-cart"
                 style={{ marginRight: 12 }}
                 size={24}
                 color="#fff"
@@ -63,4 +62,4 @@ const Empty = () => {
   );
 };
 
-export default Empty;
+export default TransaksiEmpty;

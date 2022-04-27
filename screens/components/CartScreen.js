@@ -13,7 +13,7 @@ import styles from "../../styles/Styles";
 
 import { dataAPI } from "../API";
 
-import EmptyCart from "./cart/Empty";
+import EmptyCart from "./Empty/CartEmpty";
 import { useNavigation } from "@react-navigation/native";
 import Footer from "./footer/Footer";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -36,7 +36,6 @@ const CartScreen = (props) => {
 
   const [invoice, setInvoice] = useState("");
   const [idTransaksi, setIdTransaksi] = useState("");
-  const [storeIdTransaksi, setStoreIdTransaksi] = useState("");
   const [nickname, setNickname] = useState("");
   const [idGame, setIdgame] = useState("");
   const [nama, setNama] = useState("");
@@ -101,7 +100,23 @@ const CartScreen = (props) => {
       return uuid;
     }
 
+    function generateID() {
+      var d = new Date();
+      var year = d.getFullYear();
+      var month = d.getMonth() + 1;
+      var day = d.getDate();
+
+      var hour = d.getHours();
+      var min = d.getMinutes();
+      var sec = d.getSeconds();
+
+      var id = "" + year + month + day + hour + min + sec;
+
+      return id;
+    }
+
     setInvoice(generateUUID());
+    setIdTransaksi(generateID());
   };
 
   const setTransaksi = async () => {
@@ -190,15 +205,13 @@ const CartScreen = (props) => {
   };
 
   useEffect(() => {
-    collectData();
+    //refresh data when on load
 
     console.log(idTransaksi);
-
-    //onload set nickname to empty
-    setNickname("");
-    setIdgame("");
-    setMetodePembayaran("");
-  }, []);
+    navigation.addListener("focus", () => {
+      collectData();
+    });
+  }, [navigation]);
 
   //onPress change text from pembayaran
   const getPembayaran = (item) => {
@@ -229,16 +242,17 @@ const CartScreen = (props) => {
                 </View>
               ) : (
                 <View>
-                  <Text style={styles.titleHome}>
-                    {props.route.params.itemCart.namaGame}
-                  </Text>
                   <Image
                     source={{
                       uri: props.route.params.itemCart.banner,
                     }}
                     style={styles.imageBanner}
                   />
+
                   <View style={styles.wrapperDescription}>
+                    <Text style={styles.titleGameCart}>
+                      {props.route.params.itemCart.namaGame}
+                    </Text>
                     <Text style={styles.textDescription}>
                       {props.route.params.itemCart.deskripsi}
                     </Text>
